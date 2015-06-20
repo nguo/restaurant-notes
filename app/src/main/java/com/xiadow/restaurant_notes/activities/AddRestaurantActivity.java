@@ -12,18 +12,18 @@ import com.xiadow.restaurant_notes.R;
  * AddRestaurantActivity
  */
 public class AddRestaurantActivity extends Activity {
-    private EditText etName;
+    private EditText etRName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_restaurant);
-        etName = (EditText) findViewById(R.id.etName);
+        etRName = (EditText) findViewById(R.id.etRName);
     }
 
     public void addRestaurant(View v) {
         Intent data = new Intent();
-        data.putExtra("name", etName.getText().toString());
+        data.putExtra("name", etRName.getText().toString());
         setResult(RESULT_OK, data);
         finish();
     }

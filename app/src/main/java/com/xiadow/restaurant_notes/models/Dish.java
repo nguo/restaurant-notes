@@ -9,25 +9,25 @@ import java.io.Serializable;
  */
 public class Dish implements Serializable {
     public int id;
-    private String m_dishName;
-    private String m_note;
+    private String m_name;
+    private String m_notes;
     private float m_rating;
     private Image m_image;
 
-    public Dish(int id, String dishName, String note, float rating, Image image) {
+    public Dish(int id, String name, String notes, float rating, Image image) {
         this.id = id;
-        m_dishName = dishName;
-        m_note = note;
+        m_name = name;
+        m_notes = notes;
         m_rating = rating;
         m_image = image;
     }
 
-    public String getDishName() {
-        return m_dishName;
+    public String getName() {
+        return m_name;
     }
 
-    public String getNote() {
-        return m_note;
+    public String getNotes() {
+        return m_notes;
     }
 
     public float getRating() {

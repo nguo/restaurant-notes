@@ -2,6 +2,7 @@ package com.xiadow.restaurant_notes.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xiadow.restaurant_notes.R;
+import com.xiadow.restaurant_notes.activities.DishesActivity;
 import com.xiadow.restaurant_notes.models.Restaurant;
 
 import java.util.List;
@@ -23,7 +25,7 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
     public RestaurantsAdapter(Activity context, List<Restaurant> restaurants) {
         m_context = context;
         if (restaurants == null) {
-            throw new IllegalArgumentException("contacts must not be null");
+            throw new IllegalArgumentException("restaurants must not be null");
         }
         m_restaurants = restaurants;
     }
@@ -58,30 +60,20 @@ public class RestaurantsAdapter extends RecyclerView.Adapter<RestaurantsAdapter.
             rootView = itemView;
             tvName = (TextView)itemView.findViewById(R.id.tvName);
 
-            /**
-            ivProfile = (ImageView)itemView.findViewById(R.id.ivProfile);
-            tvName = (TextView)itemView.findViewById(R.id.tvName);
-            vPalette = itemView.findViewById(R.id.vPalette);
-
             // Navigate to contact details activity on click of card view.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Contact contact = (Contact)v.getTag();
-                    if (contact != null) {
+                    final Restaurant restaurant = (Restaurant)v.getTag();
+                    if (restaurant != null) {
                         // Fire an intent when a contact is selected
                         // Pass contact object in the bundle and populate details activity.
-                        Intent intent = new Intent(context, DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.EXTRA_CONTACT, contact);
-                        Pair<View, String> p1 = Pair.create((View)ivProfile, "profile");
-                        Pair<View, String> p2 = Pair.create(vPalette, "palette");
-                        Pair<View, String> p3 = Pair.create((View)tvName, "name");
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)context, p1, p2, p3);
-                        context.startActivity(intent, options.toBundle());
+                        Intent intent = new Intent(context, DishesActivity.class);
+                        intent.putExtra("id", restaurant.id);
+                        context.startActivity(intent);
                     }
                 }
             });
-             */
         }
     }
 }
