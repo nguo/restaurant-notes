@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">restaurant_notes</string>
+
+    <string name="r_name">Restaurant Name</string>
+    <string name="title_activity_add_restaurant">Add Restaurant</string>
+    <string name="add">Add</string>
+    <string name="action_settings">Settings</string>
+</resources>
