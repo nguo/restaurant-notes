@@ -52,6 +52,7 @@ public class AddDishActivity extends Activity {
         data.putExtra("name", etDishName.getText().toString());
         data.putExtra("notes", etNotes.getText().toString());
         data.putExtra("rating", rbRating.getRating());
+        data.putExtra("imagePath", "");
         setResult(RESULT_OK, data);
         finish();
     }

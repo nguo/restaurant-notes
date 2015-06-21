@@ -9,24 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.melnykov.fab.FloatingActionButton;
 import com.xiadow.restaurant_notes.R;
 import com.xiadow.restaurant_notes.adapters.RestaurantsAdapter;
 import com.xiadow.restaurant_notes.models.Restaurant;
 
-import org.apache.commons.io.FileUtils;
+import java.util.LinkedList;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-
+/**
+ * Starting activity. List of restaurants.
+ */
 public class MainActivity extends Activity {
-    public static final String SAVE_FILE_NAME = "restaurants.txt";
-    private ArrayList<Restaurant> m_restaurants;
+    private LinkedList<Restaurant> m_restaurants;
     private RestaurantsAdapter m_adapter;
     private FloatingActionButton fab;
 
@@ -47,7 +41,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        readRestaurantsFile();
+        m_restaurants = new LinkedList<>();
+        m_restaurants.addAll(Restaurant.getAll());
 
         // Find RecyclerView and bind to adapter
         final RecyclerView rvRestaurants = (RecyclerView) findViewById(R.id.rvRestaurants);
@@ -57,6 +52,12 @@ public class MainActivity extends Activity {
 
         // Create an adapter
         m_adapter = new RestaurantsAdapter(MainActivity.this, m_restaurants);
+        m_adapter.setOnViewClickListener(new RestaurantsAdapter.OnRestaurantClickListener() {
+            @Override
+            public void onRestaurantClick(long restaurantId) {
+                onDishesView(restaurantId);
+            }
+        });
 
         // Bind adapter to list
         rvRestaurants.setAdapter(m_adapter);
@@ -77,7 +78,7 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+            if (id == R.id.action_settings) {
             return true;
         }
 
@@ -88,41 +89,18 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             String name = data.getExtras().getString("name");
-            m_restaurants.add(new Restaurant(3, name));
+            Restaurant restaurant = new Restaurant();
+            restaurant.setFields(name);
+            restaurant.save();
+            m_restaurants.addFirst(restaurant);
             m_adapter.notifyDataSetChanged();
-            writeRestaurantsFile();
+            onDishesView(restaurant.getId());
         }
     }
 
-    private void readRestaurantsFile() {
-        File filesDir = getExternalFilesDir(null);
-        File file = new File(filesDir, SAVE_FILE_NAME);
-        try {
-            m_restaurants = restaurantsFromJson(FileUtils.readFileToString(file));
-        } catch (IOException e) {
-            m_restaurants = new ArrayList<>();
-            e.printStackTrace();
-        }
-    }
-
-    private void writeRestaurantsFile() {
-        File filesDir = getExternalFilesDir(null);
-        File file = new File(filesDir, SAVE_FILE_NAME);
-        try {
-            FileUtils.writeStringToFile(file, restaurantsToJson());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String restaurantsToJson() {
-        Gson gson = new Gson();
-        return gson.toJson(m_restaurants);
-    }
-
-    private ArrayList<Restaurant> restaurantsFromJson(String json) {
-        Gson gson = new Gson();
-        Type collectionType = new TypeToken<ArrayList<Restaurant>>(){}.getType();
-        return gson.fromJson(json, collectionType);
+    private void onDishesView(long restaurantId) {
+        Intent intent = new Intent(this, DishesActivity.class);
+        intent.putExtra("id", restaurantId);
+        startActivity(intent);
     }
 }

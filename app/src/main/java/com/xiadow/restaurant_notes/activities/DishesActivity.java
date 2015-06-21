@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,11 +15,14 @@ import com.xiadow.restaurant_notes.R;
 import com.xiadow.restaurant_notes.adapters.DishesAdapter;
 import com.xiadow.restaurant_notes.models.Dish;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 
+/**
+ * Activity containing list of dishes
+ */
 public class DishesActivity extends Activity {
-    private ArrayList<Dish> m_dishes;
-    private int m_restaurantId;
+    private LinkedList<Dish> m_dishes;
+    private long m_restaurantId;
     private DishesAdapter m_adapter;
     private FloatingActionButton fab;
 
@@ -30,6 +34,10 @@ public class DishesActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dishes);
 
+        Intent i = getIntent();
+        m_restaurantId = i.getLongExtra("id", 0);
+        Log.d("nguo", "restaurantid = " + m_restaurantId);
+
         fab = (FloatingActionButton) findViewById(R.id.fabDish);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,7 +47,8 @@ public class DishesActivity extends Activity {
             }
         });
 
-        m_dishes = new ArrayList<>();
+        m_dishes = new LinkedList<>();
+        m_dishes.addAll(Dish.byRestaurantId(m_restaurantId));
 
         // Find RecyclerView and bind to adapter
         final RecyclerView rvDishes = (RecyclerView) findViewById(R.id.rvDishes);
@@ -52,9 +61,6 @@ public class DishesActivity extends Activity {
 
         // Bind adapter to list
         rvDishes.setAdapter(m_adapter);
-
-        Intent i = getIntent();
-        m_restaurantId = i.getIntExtra("id", -1);
     }
 
     @Override
@@ -83,11 +89,14 @@ public class DishesActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             String name = data.getExtras().getString("name");
-            float rating = data.getExtras().getFloat("rating");
-            String notes = data.getExtras().getString("notes");
-            m_dishes.add(new Dish(3, name, notes, rating, null));
+            float rating = data.getExtras().getFloat("rating", 0);
+            String notes = data.getExtras().getString("notes", "");
+            String imagePath = data.getExtras().getString("imagePath", "");
+            Dish dish = new Dish();
+            dish.setFields(name, m_restaurantId, notes, rating, imagePath);
+            dish.save();
+            m_dishes.addFirst(dish);
             m_adapter.notifyDataSetChanged();
-            //writeRestaurantsFile();
         }
     }
 }

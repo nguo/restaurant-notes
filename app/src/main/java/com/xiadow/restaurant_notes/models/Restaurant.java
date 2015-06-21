@@ -1,39 +1,39 @@
 package com.xiadow.restaurant_notes.models;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Restaurant - model of a restaurant object
  */
-public class Restaurant implements Serializable{
-    public int id;
+@Table(name = "Restaurants")
+public class Restaurant extends Model implements Serializable{
+    @Column(name = "name")
     private String m_name;
-    private List<Dish> m_dishes;
 
-    public Restaurant(int id, String name, List<Dish> dishes) {
-        this.id = id;
+    public Restaurant() {
+        super();
+    }
+
+    public void setFields(String name) {
         m_name = name;
-        m_dishes = dishes;
     }
 
-    public Restaurant(int id, String name) {
-        this.id = id;
-        m_name = name;
-        m_dishes = new ArrayList<>();
-    }
+    public String getName() { return m_name; }
 
-    public String getName() {
-
-        return m_name;
-    }
-
-    public List<Dish> getDishes() {
-        return m_dishes;
-    }
-
-    public void addDish(Dish dish) {
-        m_dishes.add(dish);
+    /** activeandroid queries */
+    public static List<Restaurant> getAll() {
+        try {
+            return new Select().from(Restaurant.class).orderBy("name ASC").execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new LinkedList<>();
+        }
     }
 }
