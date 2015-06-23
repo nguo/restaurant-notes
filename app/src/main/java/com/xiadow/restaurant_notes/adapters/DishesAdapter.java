@@ -6,9 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.xiadow.restaurant_notes.R;
 import com.xiadow.restaurant_notes.models.Dish;
 
@@ -42,8 +44,10 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
         Dish dish = m_dishes.get(position);
         holder.rootView.setTag(dish);
         holder.tvName.setText(dish.getName());
-        holder.tvNotes.setText(dish.getNotes());
         holder.rbRating.setRating(dish.getRating());
+        if (dish.getImagePath() != null && dish.getImagePath().length() > 0) {
+            Picasso.with(m_context).load(dish.getImagePath()).into(holder.ivDishPreview);
+        }
     }
 
     @Override
@@ -54,16 +58,23 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
     // Provide a reference to the views for each contact item
     public final static class VH extends RecyclerView.ViewHolder {
         final View rootView;
+        final ImageView ivDishPreview;
         final TextView tvName;
         final RatingBar rbRating;
-        final TextView tvNotes;
 
         public VH(View itemView, final Context context) {
             super(itemView);
             rootView = itemView;
-            tvName = (TextView)itemView.findViewById(R.id.tvName);
-            rbRating = (RatingBar)itemView.findViewById(R.id.rbRating);
-            tvNotes = (TextView)itemView.findViewById(R.id.tvNotes);
+            ivDishPreview = (ImageView) itemView.findViewById(R.id.ivDishPreview);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            rbRating = (RatingBar) itemView.findViewById(R.id.rbRating);
+
+
+//            Bitmap[] bitmaps = {BitmapFactory.decodeResource(context.getResources(),
+//                    R.drawable.segment_empty), BitmapFactory.decodeResource(context.getResources(),
+//                    R.drawable.segment_empty), BitmapFactory.decodeResource(context.getResources(),
+//                    R.drawable.segment_full)};
+//            rbRating.setProgressDrawable(buildRatingBarDrawables(bitmaps));
 
             /**
 

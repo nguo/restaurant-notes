@@ -5,4 +5,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="SimpleRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/simple_rating_bar</item>
+        <item name="android:minHeight">@dimen/rating_bar_height</item>
+        <item name="android:maxHeight">@dimen/rating_bar_height</item>
+    </style>
+
 </resources>

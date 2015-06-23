@@ -8,10 +8,22 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:id="@+id/ivDish"
+        android:src="@drawable/ic_blank_photo"
+        android:scaleType="centerCrop"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/ibCamera"
+        android:src="@drawable/ic_camera"
+        android:scaleType="fitXY"
+        android:onClick="onCamera"
+        android:layout_alignBottom="@+id/ivDish"
+        android:layout_alignParentEnd="true"/>
 
     <TextView
         android:layout_width="wrap_content"
