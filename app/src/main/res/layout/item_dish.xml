@@ -18,14 +18,25 @@
 
         <ImageView
             android:id="@+id/ivDishPreview"
+            android:src="@drawable/ic_plate"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/grid_profile_height"
+            android:layout_height="@dimen/card_image_height"
             android:scaleType="centerCrop" />
+        
+        <ImageView
+            android:layout_width="@dimen/ic_notes_size"
+            android:layout_height="@dimen/ic_notes_size"
+            android:layout_margin="@dimen/ic_notes_margin"
+            android:id="@+id/ivNotesIndicator"
+            android:visibility="invisible"
+            android:src="@drawable/ic_notes"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/rating_bar_height"
-            android:background="#55000000"
+            android:background="@color/theme_color_transparent"
             android:layout_alignBottom="@id/ivDishPreview"/>
 
         <RatingBar
@@ -43,19 +54,12 @@
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/contact_text_size"
+            android:textSize="@dimen/card_text_size"
             android:textColor="@android:color/white"
-            android:padding="3dp"
+            android:padding="@dimen/card_text_padding"
             android:gravity="center"
-            android:background="#55000000"
+            android:background="@color/theme_color_transparent"
             android:layout_above="@id/rbRating"/>
-
-        <!--TextView
-            android:id="@+id/tvNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/contact_text_size"
-            android:textColor="@android:color/black"
-            android:layout_gravity="center_horizontal" /-->
+        
     </RelativeLayout>
 </android.support.v7.widget.CardView>

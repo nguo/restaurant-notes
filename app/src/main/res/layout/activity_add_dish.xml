@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/ivDish"
-        android:src="@drawable/ic_blank_photo"
+        android:src="@drawable/ic_plate"
         android:scaleType="centerCrop"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -25,13 +25,24 @@
         android:layout_alignBottom="@+id/ivDish"
         android:layout_alignParentEnd="true"/>
 
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:id="@+id/rbRatingEdit"
+        android:isIndicator="false"
+        android:layout_below="@+id/ivDish"
+        android:layout_centerHorizontal="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/d_name"
+        android:textColor="@color/theme_color_darker"
+        android:textSize="@dimen/topic_text_size"
+        android:textStyle="bold"
         android:id="@+id/tvDishName"
-        android:layout_below="@id/ivDish"
-        android:layout_centerHorizontal="true"/>
+        android:layout_below="@id/rbRatingEdit"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -40,21 +51,16 @@
         android:layout_below="@+id/tvDishName"
         android:layout_alignParentStart="true" />
 
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/rbRatingEdit"
-        android:isIndicator="false"
-        android:layout_below="@+id/etDishName"
-        android:layout_centerHorizontal="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin"
         android:text="@string/notes"
         android:id="@+id/tvNotes"
-        android:layout_below="@+id/rbRatingEdit"
-        android:layout_centerHorizontal="true" />
+        android:textColor="@color/theme_color_darker"
+        android:textStyle="bold"
+        android:textSize="@dimen/topic_text_size"
+        android:layout_below="@+id/etDishName" />
 
     <EditText
         android:layout_width="match_parent"
@@ -67,7 +73,7 @@
         android:id="@+id/btnAddDish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add"
+        android:text="@string/save"
         android:onClick="addDish"
         android:layout_below="@+id/etNotes"
         android:layout_centerHorizontal="true" />

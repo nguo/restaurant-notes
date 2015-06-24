@@ -1,17 +1,21 @@
 package com.xiadow.restaurant_notes.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.activeandroid.Model;
 import com.melnykov.fab.FloatingActionButton;
 import com.xiadow.restaurant_notes.R;
 import com.xiadow.restaurant_notes.adapters.RestaurantsAdapter;
+import com.xiadow.restaurant_notes.helpers.OnModelClickListener;
 import com.xiadow.restaurant_notes.models.Restaurant;
 
 import java.util.LinkedList;
@@ -52,10 +56,20 @@ public class MainActivity extends Activity {
 
         // Create an adapter
         m_adapter = new RestaurantsAdapter(MainActivity.this, m_restaurants);
-        m_adapter.setOnViewClickListener(new RestaurantsAdapter.OnRestaurantClickListener() {
+        m_adapter.setOnViewClickListener(new OnModelClickListener() {
             @Override
-            public void onRestaurantClick(long restaurantId) {
-                onDishesView(restaurantId);
+            public void onClick(Model m) {
+                Restaurant restaurant = (Restaurant) m;
+                if (restaurant != null) {
+                    onDishesView(restaurant.getId());
+                }
+            }
+            @Override
+            public void onLongClick(Model m) {
+                Restaurant restaurant = (Restaurant) m;
+                if (restaurant != null) {
+                    promptRestaurantDelete(restaurant);
+                }
             }
         });
 
@@ -102,5 +116,40 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, DishesActivity.class);
         intent.putExtra("id", restaurantId);
         startActivity(intent);
+    }
+
+    private void promptRestaurantDelete(final Restaurant restaurant) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("Delete Restaurant?");
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        Model.delete(Restaurant.class, restaurant.getId());
+                        m_restaurants.remove(restaurant);
+                        m_adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+//        alertDialog.getButton(alertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.theme_color_darker));
+//        alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.theme_color_darker));
     }
 }

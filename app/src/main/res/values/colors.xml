@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_color_lighter">#FFC285</color>
+    <color name="theme_color_darker">#FF9933</color>
+    <color name="theme_color_transparent">#FFFF9933</color>
+</resources>

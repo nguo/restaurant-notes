@@ -1,17 +1,21 @@
 package com.xiadow.restaurant_notes.activities;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.activeandroid.Model;
 import com.melnykov.fab.FloatingActionButton;
 import com.xiadow.restaurant_notes.R;
 import com.xiadow.restaurant_notes.adapters.DishesAdapter;
+import com.xiadow.restaurant_notes.helpers.OnModelClickListener;
 import com.xiadow.restaurant_notes.models.Dish;
 
 import java.util.LinkedList;
@@ -20,6 +24,11 @@ import java.util.LinkedList;
  * Activity containing list of dishes
  */
 public class DishesActivity extends Activity {
+    public static final String DISH_TYPE_NEW = "dish_new";
+    public static final String DISH_TYPE_EDIT = "dish_edit";
+    public static final String EXTRA_DISH_TYPE = "dish_type";
+    public static final String EXTRA_DISH_ID = "dish_id";
+
     private LinkedList<Dish> m_dishes;
     private long m_restaurantId;
     private DishesAdapter m_adapter;
@@ -40,8 +49,7 @@ public class DishesActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DishesActivity.this, AddDishActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
+                onDish(null);
             }
         });
 
@@ -56,6 +64,23 @@ public class DishesActivity extends Activity {
 
         // Create an adapter
         m_adapter = new DishesAdapter(DishesActivity.this, m_dishes);
+        m_adapter.setOnViewClickListener(new OnModelClickListener() {
+            @Override
+            public void onClick(Model m) {
+                Dish dish = (Dish) m;
+                if (dish != null) {
+                    onDish(dish);
+                }
+            }
+
+            @Override
+            public void onLongClick(Model m) {
+                Dish dish = (Dish) m;
+                if (dish != null) {
+                    promptDishDelete(dish);
+                }
+            }
+        });
 
         // Bind adapter to list
         rvDishes.setAdapter(m_adapter);
@@ -90,11 +115,64 @@ public class DishesActivity extends Activity {
             float rating = data.getExtras().getFloat("rating", 0);
             String notes = data.getExtras().getString("notes", "");
             String imagePath = data.getExtras().getString("imagePath", "");
-            Dish dish = new Dish();
+            long dishId = data.getExtras().getLong(EXTRA_DISH_ID, -1);
+
+            boolean isNewDish = false;
+            Dish dish = Model.load(Dish.class, dishId);
+            if (dish == null) {
+                dish = new Dish();
+                isNewDish = true;
+            }
             dish.setFields(name, m_restaurantId, notes, rating, imagePath);
             dish.save();
-            m_dishes.addFirst(dish);
+            if (isNewDish) {
+                m_dishes.addFirst(dish);
+            }
             m_adapter.notifyDataSetChanged();
         }
+    }
+
+    private void onDish(Dish dish) {
+        Intent intent = new Intent(DishesActivity.this, AddDishActivity.class);
+        if (dish == null) {
+            intent.putExtra(EXTRA_DISH_TYPE, DISH_TYPE_NEW);
+        } else {
+            intent.putExtra(EXTRA_DISH_TYPE, DISH_TYPE_EDIT);
+            intent.putExtra(EXTRA_DISH_ID, dish.getId());
+        }
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    private void promptDishDelete(final Dish dish) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set title
+        alertDialogBuilder.setTitle("Delete Dish?");
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        Model.delete(Dish.class, dish.getId());
+                        m_dishes.remove(dish);
+                        m_adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 }

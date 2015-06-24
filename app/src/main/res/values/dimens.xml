@@ -4,13 +4,16 @@
     <dimen name="activity_vertical_margin">5dp</dimen>
     <dimen name="card_corner_radius">1dp</dimen>
     <dimen name="card_elevation">8dp</dimen>
+    <dimen name="text_margin">8dp</dimen>
     <dimen name="grid_margin">2dp</dimen>
     <dimen name="cell_margin">2dp</dimen>
-    <dimen name="grid_profile_height">160dp</dimen>
     <dimen name="palette_height">48dp</dimen>
-    <dimen name="contact_detail_image_height">380dp</dimen>
-    <dimen name="contact_text_size">18sp</dimen>
-    <dimen name="contact_details_phone_margin_top">8dp</dimen>
+    <dimen name="card_image_height">160dp</dimen>
+    <dimen name="card_text_size">16sp</dimen>
+    <dimen name="card_text_padding">2dp</dimen>
     <dimen name="fab_elevation">10dp</dimen>
     <dimen name="rating_bar_height">8dp</dimen>
+    <dimen name="topic_text_size">18sp</dimen>
+    <dimen name="ic_notes_size">16dp</dimen>
+    <dimen name="ic_notes_margin">5dp</dimen>
 </resources>

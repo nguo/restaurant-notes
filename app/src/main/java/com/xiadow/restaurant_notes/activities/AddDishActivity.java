@@ -12,8 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 
+import com.activeandroid.Model;
 import com.squareup.picasso.Picasso;
 import com.xiadow.restaurant_notes.R;
+import com.xiadow.restaurant_notes.models.Dish;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class AddDishActivity extends Activity {
     private RatingBar rbRating;
     private ImageView ivDish;
     private String m_imagePath = "";
+    private Dish m_dish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,23 @@ public class AddDishActivity extends Activity {
         etNotes = (EditText) findViewById(R.id.etNotes);
         rbRating = (RatingBar) findViewById(R.id.rbRatingEdit);
         ivDish = (ImageView) findViewById(R.id.ivDish);
+
+        Intent i = getIntent();
+        if (i.getExtras().getString(DishesActivity.EXTRA_DISH_TYPE, "").equals(DishesActivity.DISH_TYPE_EDIT)) {
+            long dishId = i.getLongExtra(DishesActivity.EXTRA_DISH_ID, -1);
+            m_dish = Model.load(Dish.class, dishId);
+            if (m_dish != null) {
+                etDishName.setText(m_dish.getName());
+                etNotes.setText(m_dish.getNotes());
+                rbRating.setRating(m_dish.getRating());
+                if (m_dish.hasImagePath()) {
+                    m_imagePath = m_dish.getImagePath();
+                    Picasso.with(this).load(m_imagePath).into(ivDish);
+                }
+            }
+        } else {
+            m_dish = null;
+        }
     }
 
     @Override
@@ -68,6 +88,9 @@ public class AddDishActivity extends Activity {
         data.putExtra("notes", etNotes.getText().toString());
         data.putExtra("rating", rbRating.getRating());
         data.putExtra("imagePath", m_imagePath);
+        if (m_dish != null) {
+            data.putExtra(DishesActivity.EXTRA_DISH_ID, m_dish.getId());
+        }
         setResult(RESULT_OK, data);
         finish();
     }

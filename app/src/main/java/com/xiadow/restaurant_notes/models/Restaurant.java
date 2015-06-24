@@ -5,7 +5,6 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * Restaurant - model of a restaurant object
  */
 @Table(name = "Restaurants")
-public class Restaurant extends Model implements Serializable{
+public class Restaurant extends Model {
     @Column(name = "name")
     private String m_name;
 

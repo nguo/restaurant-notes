@@ -5,7 +5,6 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * Dish - holds information about a dish
  */
 @Table(name = "Dishes")
-public class Dish extends Model implements Serializable {
+public class Dish extends Model {
     @Column(name = "name")
     private String m_name;
     @Column(name = "restaurantId")
@@ -48,24 +47,9 @@ public class Dish extends Model implements Serializable {
 
     public String getImagePath() { return m_imagePath; }
 
-    /** activeandroid queries */
-    public static Dish byDishId(long dishId) {
-        try {
-            return new Select().from(Dish.class).where("mId = ?", dishId).executeSingle();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public boolean hasImagePath() { return m_imagePath != null && !m_imagePath.isEmpty(); }
 
-    public static Dish firstByRestaurantId(long restaurantId) {
-        try {
-            return new Select().from(Dish.class).where("restaurantId = ?", restaurantId).executeSingle();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+    public boolean hasNotes() { return m_notes != null && !m_notes.isEmpty(); }
 
     public static List<Dish> byRestaurantId(long restaurantId) {
         try {

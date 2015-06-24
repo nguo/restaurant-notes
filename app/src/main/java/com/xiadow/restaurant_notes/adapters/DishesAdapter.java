@@ -12,16 +12,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.xiadow.restaurant_notes.R;
+import com.xiadow.restaurant_notes.helpers.OnModelClickListener;
+import com.xiadow.restaurant_notes.helpers.Util;
 import com.xiadow.restaurant_notes.models.Dish;
 
 import java.util.List;
 
 /**
- * RestaurantsAdapter
+ * DishesAdapter
  */
 public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
     private Activity m_context;
     private List<Dish> m_dishes;
+    private OnModelClickListener m_listener;
 
     public DishesAdapter(Activity context, List<Dish> dishes) {
         m_context = context;
@@ -31,10 +34,15 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
         m_dishes = dishes;
     }
 
+    public void setOnViewClickListener(final OnModelClickListener listener) {
+        m_listener = listener;
+    }
+
     // Inflate the view based on the viewType provided.
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dish, parent, false);
+        Util.registerListeners(itemView, m_listener);
         return new VH(itemView, m_context);
     }
 
@@ -45,8 +53,11 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
         holder.rootView.setTag(dish);
         holder.tvName.setText(dish.getName());
         holder.rbRating.setRating(dish.getRating());
-        if (dish.getImagePath() != null && dish.getImagePath().length() > 0) {
+        if (dish.hasImagePath()) {
             Picasso.with(m_context).load(dish.getImagePath()).into(holder.ivDishPreview);
+        }
+        if (dish.hasNotes()) {
+            holder.ivNotesIndicator.setVisibility(View.VISIBLE);
         }
     }
 
@@ -61,6 +72,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
         final ImageView ivDishPreview;
         final TextView tvName;
         final RatingBar rbRating;
+        final ImageView ivNotesIndicator;
 
         public VH(View itemView, final Context context) {
             super(itemView);
@@ -68,6 +80,7 @@ public class DishesAdapter extends RecyclerView.Adapter<DishesAdapter.VH> {
             ivDishPreview = (ImageView) itemView.findViewById(R.id.ivDishPreview);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             rbRating = (RatingBar) itemView.findViewById(R.id.rbRating);
+            ivNotesIndicator = (ImageView) itemView.findViewById(R.id.ivNotesIndicator);
 
 
 //            Bitmap[] bitmaps = {BitmapFactory.decodeResource(context.getResources(),
